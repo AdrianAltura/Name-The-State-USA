@@ -8,22 +8,12 @@ image = 'blank_states_img.gif'
 screen.addshape(image)
 turtle.shape(image)
 
-# This can be improved by opting out the state_x and state_y, and directly put it to set position
-state = pandas.read_csv('50_states.csv')
-state_states = state.state.to_list()
-state_x = state.x.to_list()
-state_y = state.y.to_list()
-
-total_state = len(state_states)
+states = pandas.read_csv('50_states.csv')
+total_state = len(states)
 score = 0
 
-state_dict = {}
+state_dict = {row.state: (row.x, row.y) for index, row in states.iterrows()}
 the_answers = []
-missing_states = []
-
-# Turning the data into a dict, with the states as keys and its coordinates as values
-for i in range(len(state_states)):
-    state_dict.update({state_states[i]: (state_x[i], state_y[i])})
 
 run = True
 
@@ -41,9 +31,7 @@ while run:
         new.setposition(state_dict[answer])
         new.write(answer, align='left')
 
-for state in state_states:
-    if state not in the_answers:
-        missing_states.append(state)
+missing_states = [state for state in states.state if state not in the_answers]
 
 dict_data = {
     'Missing States': missing_states,
